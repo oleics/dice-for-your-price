@@ -62,6 +62,57 @@ $(function() {
       // outcomes.nuke();
       updateOutcomes();
       
+      function updateCurrentOutcome(outcome) {
+        var $el = $('.current-outcome'),
+            player;
+        
+        $el.css({
+          padding: '50px 100px',
+          margin: '5px 5px',
+          backgroundColor: '#aaaaaa'
+        });
+        
+        drama(dice(3, 10), function() {
+          setOutcome(outcome, function() {
+            $el.css({backgroundColor: '#aaffaa'});
+          });
+        });
+        
+        function drama(num, cb) {
+          if(num === 0) return cb();
+          randomPlayer(function(player) {
+            setOutcome({
+              price: outcome.price,
+              player: player
+            }, function() {
+              drama(--num, cb);
+            });
+          });
+        }
+        
+        function setOutcome(outcome, cb) {
+          
+          $el.find('.current').removeClass('current').fadeOut(dice(50, 800), function() {
+            $(this).remove();
+          }).end();
+          
+          $el.append(
+              $('<div>')
+                .hide()
+                .addClass('current')
+                .css('position', 'absolute')
+                .append(
+                  $('<span>').text((outcome.player.name || outcome.player.key)+': ')
+                )
+                .append(
+                  $('<span>').text(' ' + (outcome.price.name || outcome.price.key))
+                )
+                .fadeIn(dice(50, 800), cb)
+            )
+          ;
+        }
+      }
+      
       function updateOutcomes() {
         var $l = $('.outcomelist');
         $l.empty();
@@ -93,10 +144,10 @@ $(function() {
                   .data('key', price.key)
                   .bind('click', onPriceRemove)
               ).append(
-                $('<span>')
-                  .text(' ' + (price.name || price.key))
+                $('<span>').text(' ' + (price.num || 0) + ' * ')
               ).append(
-                $('<span>').text(' ' + (price.num || 0))
+                $('<span>')
+                  .text(' ' + (price.name || price.key) + ' ')
               ).append(
                 price.num > 0 ?
                 $('<a>')
@@ -134,19 +185,20 @@ $(function() {
         $('.add-price').bind('submit', onAddPrice);
         
         function onDiceForPrice() {
+          updateOutcomes();
           prices.get($(this).data('key'), function(price) {
-            console.log(price);
+            // console.log(price);
             // console.log(outcomes);
             randomPlayer(function(player) {
-              console.log(player);
+              // console.log(player);
               --price.num;
               prices.save(price, function() {
                 updatePicelist();
                 outcomes.save({
                   price: price,
                   player: player
-                }, function() {
-                  updateOutcomes();
+                }, function(outcome) {
+                  updateCurrentOutcome(outcome);
                 });
               });
             });
