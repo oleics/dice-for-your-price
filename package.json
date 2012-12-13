@@ -1,5 +1,11 @@
 {
   "name": "dice-for-your-price",
-  "version": "0.0.0",
-  "private": true
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
 }
