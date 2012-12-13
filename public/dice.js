@@ -2,27 +2,118 @@ $(function() {
   
   // Players
   Lawnchair({name: 'players', record: 'player'}, function(players) {
+    var $playerboxes = $('.playerboxes');
+    
+    var cycling = 0,
+        isCycling = false;
+    
+    $('.show-settings').bind('click', function() {
+      $('.settings').toggleClass('hide');
+      $('.game').toggleClass('hide');
+    });
+    $('.stop-cycling').hide().bind('click', stopCycling);
+    $('.start-cycling').bind('click', startCycling);
+    
     // players.nuke();
     updatePlayerlist();
+    
+    function updatePlayerboxes() {
+      var index = 0;
+      $playerboxes.empty();
+      
+      players.all(function(records) {
+        shuffle(records);
+        _.each(records, function(player) {
+          var $b = $playerboxes.find('#playerbox-'+player.key);
+          if($b.length === 0) {
+            $b = $('<div>')
+              .addClass('playerbox')
+              .text(player.name||player.key)
+            ;
+            $playerboxes.append($b);
+          }
+          $b.animate({
+            // zIndex: ++index,
+            top: ($playerboxes.height() / 2) - ($b.height() / 2) + dice(-10, 10, 2),
+            left: ($playerboxes.width() / 2) - ($b.width() / 2) + dice(-10, 10, 2)
+          });
+        });
+      });
+    }
+    
+    function stackPlayerboxes() {
+      $playerboxes.children().each(function(i, c) {
+        $(c).animate({
+          // zIndex: ++index,
+          top: ($playerboxes.height() / 2) - ($b.height() / 2) + dice(-10, 10, 2),
+          left: ($playerboxes.width() / 2) - ($b.width() / 2) + dice(-10, 10, 2)
+        });
+      });
+    }
+    
+    function cycle() {
+      if(!cycling) {
+        isCycling = false;
+        $('.start-cycling').show();
+        return;
+      }
+      var $b = $playerboxes.children().last(),
+          left = -1*($b.width()+dice(1, 5)),
+          top = dice(1, 7),
+          slowdown = cycling > 0 ? 1 : 1;
+      $b.animate({
+          top: '+=' + top,
+          left: '+=' + left
+        }, dice(slowdown * 150, slowdown * 300), function() {
+          $b.detach().prependTo($playerboxes).animate({
+              top: ($playerboxes.height() / 2) - ($b.height() / 2) + dice(-10, 10, 2),
+              left: ($playerboxes.width() / 2) - ($b.width() / 2) + dice(-10, 10, 2)
+            }, dice(200, 300), function() {
+              if(cycling>0) --cycling;
+              cycle();
+            })
+          ;
+        })
+      ;
+    }
+    
+    function startCycling() {
+      $('.start-cycling').hide();
+      $('.stop-cycling').show();
+      updatePlayerboxes();
+      cycling = -1;
+      if(!isCycling) {
+        isCycling = true;
+        cycle();
+      }
+    }
+    
+    function stopCycling() {
+      $('.stop-cycling').hide();
+      cycling = dice(5, 15);
+    }
     
     function updatePlayerlist() {
       var $l = $('.playerlist');
       $l.empty();
       players.each(function(player) {
         $l.append(
-          $('<div>').append(
-            $('<a>')
-              .css({cursor: 'pointer', color: '#999'})
-              .text('x')
-              .data('key', player.key)
-              .bind('click', onPlayerRemove)
-          ).append(
-            $('<span>').text(' ' + (player.name || player.key))
-          ).append(
-            $('<span>').text(' ' + player.prices.join(', '))
-          )
+          $('<div>')
+            .addClass('player')
+            .append(
+              $('<a>')
+                .addClass('btn')
+                .text('x')
+                .data('key', player.key)
+                .bind('click', onPlayerRemove)
+            ).append(
+              $('<span>').text(' ' + (player.name || player.key))
+            ).append(
+              $('<span>').text(' ' + player.prices.join(', '))
+            )
         );
       });
+      updatePlayerboxes();
     }
     
     function onPlayerRemove() {
@@ -137,26 +228,28 @@ $(function() {
           $l.empty();
           prices.each(function(price) {
             $l.append(
-              $('<div>').append(
-                $('<a>')
-                  .css({cursor: 'pointer', color: '#999'})
-                  .text('x')
-                  .data('key', price.key)
-                  .bind('click', onPriceRemove)
-              ).append(
-                $('<span>').text(' ' + (price.num || 0) + ' * ')
-              ).append(
-                $('<span>')
-                  .text(' ' + (price.name || price.key) + ' ')
-              ).append(
-                price.num > 0 ?
-                $('<a>')
-                  .css({cursor: 'pointer', color: '#999'})
-                  .text('dice')
-                  .data('key', price.key)
-                  .bind('click', onDiceForPrice)
-                : $('<span>')
-              )
+              $('<div>')
+                .addClass('price')
+                .append(
+                  $('<a>')
+                    .addClass('btn')
+                    .text('x')
+                    .data('key', price.key)
+                    .bind('click', onPriceRemove)
+                ).append(
+                  $('<span>').text(' ' + (price.num || 0) + ' * ')
+                ).append(
+                  $('<span>')
+                    .text(' ' + (price.name || price.key) + ' ')
+                ).append(
+                  price.num > 0 ?
+                  $('<a>')
+                    .addClass('btn')
+                    .text('dice')
+                    .data('key', price.key)
+                    .bind('click', onDiceForPrice)
+                  : $('<span>')
+                )
             );
           });
         }
