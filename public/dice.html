@@ -38,7 +38,7 @@
         background-color: #fa3333;
       }
       
-      .playerboxes {
+      .game-render-area {
         background-color: #333;
         position:absolute;
         top: 20px;
@@ -60,12 +60,18 @@
         position: relative;
       }
       
-      .cycle-ctrls {
+      .game-buttons-area {
         position:absolute;
         top: 0;
         left: 0;
         right: 0;
         background-color: #333;
+      }
+      
+      .show-settings {
+        position: fixed;
+        right: 30px;
+        top:0
       }
       
       .btn {
@@ -81,18 +87,17 @@
     </style>
   </head>
   <body>
-  
+    <a class="show-settings btn">Settings</a>
+    
     <div class="game hide">
-      <div class="cycle-ctrls">
-        <a class="show-settings btn">Settings</a>
+      <div class="game-buttons-area">
         <a class="start-cycling btn">Start</a>
         <a class="stop-cycling btn">Stop</a>
       </div>
-      <div class="playerboxes"></div>
+      <div class="game-render-area"></div>
     </div>
     
     <div class="settings">
-      <a class="show-settings btn">Play</a>
       <p>
         <div class="current-outcome"><div></div></div>
       </p>
@@ -125,6 +130,11 @@
     <script src="js/libs/lawnchair.js"></script>
     <script src="js/libs/lawnchair-dom.js"></script>
     <script src="js/libs/random.js"></script>
-    <script src="js/dice.js"></script>
+    <!-- <script src="js/dice.js"></script> -->
+    <script src="js/players.js"></script>
+    <script src="js/prices.js"></script>
+    <script src="js/outcomes.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
   </body>
 </html>
