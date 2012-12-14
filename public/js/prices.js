@@ -23,14 +23,14 @@ function createPrices(cb) {
             ).append(
               $('<span>')
                 .text(' ' + (price.name || price.key) + ' ')
-            // ).append(
-              // price.num > 0 ?
-              // $('<a>')
-                // .addClass('btn')
-                // .text('dice')
-                // .data('key', price.key)
-                // .bind('click', onDiceForPrice)
-              // : $('<span>')
+            ).append(
+              price.num > 0 ?
+              $('<a>')
+                .addClass('btn')
+                .text('Verlosen')
+                .data('key', price.key)
+                .bind('click', onDiceClick)
+                : $('<span>')
             )
         );
       });
@@ -55,6 +55,10 @@ function createPrices(cb) {
         updatePricelist();
       });
       return false;
+    }
+    
+    function onDiceClick() {
+      prices.get($(this).data('key'), prices.onDiceForPrice);
     }
     
     _.extend(prices, {

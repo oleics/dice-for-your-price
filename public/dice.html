@@ -28,6 +28,21 @@
         height: 32px;
       }
       
+      .price {
+        height: 32px;
+      }
+      
+      .outcome {
+        height: 32px;
+      }
+      
+      .show-settings {
+        position: fixed;
+        left: 0;
+        bottom:0;
+        z-index:4000;
+      }
+      
       .game {
         position:absolute;
         top: 0;
@@ -38,40 +53,62 @@
         background-color: #fa3333;
       }
       
+      .game-buttons-area {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #333;
+        z-index:3000;
+      }
+      
       .game-render-area {
         background-color: #333;
         position:absolute;
-        top: 20px;
+        top: 0;
         bottom: 0;
         left: 0;
         right: 0;
+        z-index: 200;
       }
       
-      .playerbox {
-        width: 92px;
-        height: 128px;
-        background-color: #999;
-        position: absolute;
-        border-radius: 5px;
-        border: 1px outset #535353;
-      }
-      
-      .playerbox stacked {
-        position: relative;
-      }
-      
-      .game-buttons-area {
+      .game-price-area {
         position:absolute;
-        top: 0;
+        top: 15%;
+        bottom: 0;
         left: 0;
         right: 0;
-        background-color: #333;
+        z-index: 300;
+        color: #fafafa;
+        font-size: 48pt;
+        text-align: center;
       }
       
-      .show-settings {
-        position: fixed;
-        right: 30px;
-        top:0
+      .game-winner-area {
+        position:absolute;
+        top: 75%;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 400;
+        color: #33fa33;
+        font-size: 48pt;
+        text-align: center;
+      }
+      
+      .card {
+        width: 400px;
+        height: 260px;
+        background-color: #fafafa;
+        position: absolute;
+        border-radius: 5px;
+        border: 1px outset #e3e3e3;
+        text-align: center;
+        line-height: 260px;
+        font-size: 48pt;
+      }
+      
+      .card stacked {
+        position: relative;
       }
       
       .btn {
@@ -84,44 +121,62 @@
       .hide {
         display: none;
       }
+      
+      .settings > p {
+        float: left;
+      }
+      
+      fieldset {
+        padding: 20px;
+        float: left;
+      }
     </style>
   </head>
   <body>
-    <a class="show-settings btn">Settings</a>
+    <a class="show-settings btn hide">Play</a>
     
     <div class="game hide">
       <div class="game-buttons-area">
+        <a class="shuffle-cards btn">Karten mischen</a>
         <a class="start-cycling btn">Start</a>
         <a class="stop-cycling btn">Stop</a>
+        <a class="continue btn">Continue</a>
       </div>
+      <div class="game-winner-area">Winner</div>
+      <div class="game-price-area"></div>
       <div class="game-render-area"></div>
     </div>
     
     <div class="settings">
       <p>
-        <div class="current-outcome"><div></div></div>
+        <fieldset>
+          <legend>Spieler</legend>
+          <div class="playerlist"></div>
+          <form class="add-player">
+            <input class="name" placeholder="Neuer Spieler" />
+            <button type="submit">OK</button>
+          </form>
+        </fieldset>
       </p>
       
       <p>
-        <div class="outcomelist"></div>
-        <button class="nuke">Nuke</button>
+        <fieldset>
+          <legend>Preise</legend>
+          <div class="pricelist"></div>
+          <form class="add-price">
+            <input class="name" type="text" placeholder="Neuer Preis" />
+            <input style="width:30px" class="num" size="4" value="1" type="number" />
+            <button type="submit">OK</button>
+          </form>
+        </fieldset>
       </p>
       
       <p>
-        <div class="pricelist"></div>
-        <form class="add-price">
-          <input class="name" type="text" placeholder="New Price" />
-          <input class="num" size="4" value="1" type="number" />
-          <button type="submit">Add</button>
-        </form>
-      </p>
-      
-      <p>
-        <div class="playerlist"></div>
-        <form class="add-player">
-          <input class="name" placeholder="New Player" />
-          <button type="submit">Add</button>
-        </form>
+        <fieldset>
+          <legend>Gewinner</legend>
+          <div class="outcomelist"></div>
+          <a class="nuke-outcomes btn">Löschen</a>
+        </fieldset>
       </p>
     </div>
     

@@ -10,11 +10,13 @@ function createOutcomes(cb) {
         $l.empty();
         outcomes.each(function(outcome) {
           $l.append(
-            $('<div>').append(
-              $('<span>').text((outcome.player.name || outcome.player.key)+': ')
-            ).append(
-              $('<span>').text(' ' + (outcome.price.name || outcome.price.key))
-            )
+            $('<div>')
+              .addClass('outcome')
+              .append(
+                $('<span>').text((outcome.player.name || outcome.player.key)+': ')
+              ).append(
+                $('<span>').text(' ' + (outcome.price.name || outcome.price.key))
+              )
           );
         });
       }
